@@ -61,8 +61,8 @@ def main(email):
             continue
 
         # We will first fetch the taxonomy information to classify the genome.
-        completed = False
-        while not completed:
+        completed_req = False
+        while not completed_req:
             try:
                 handle = Bio.Entrez.efetch(db="nucleotide",
                                            id=identifier,
@@ -70,7 +70,7 @@ def main(email):
                                            retmode="text")
                 record_text = handle.read()
                 handle.close()
-                completed = True
+                completed_req = True
             except Exception as e:
                 print(f"Error fetching {identifier}: {e}")
                 print("Sleeping for 5 seconds...")
