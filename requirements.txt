@@ -1,0 +1,9 @@
+BioPython
+pandas
+tqdm
+numpy
+scipy
+pyensembl
+openpyxl
+# tRNAscan-SE  bioconda
+# blast bioconda
