@@ -1,4 +1,5 @@
 import os
+import time
 from io import StringIO
 
 import Bio.Entrez
@@ -60,12 +61,20 @@ def main(email):
             continue
 
         # We will first fetch the taxonomy information to classify the genome.
-        handle = Bio.Entrez.efetch(db="nucleotide",
-                                   id=identifier,
-                                   rettype="gb",
-                                   retmode="text")
-        record_text = handle.read()
-        handle.close()
+        completed = False
+        while not completed:
+            try:
+                handle = Bio.Entrez.efetch(db="nucleotide",
+                                           id=identifier,
+                                           rettype="gb",
+                                           retmode="text")
+                record_text = handle.read()
+                handle.close()
+                completed = True
+            except Exception as e:
+                print(f"Error fetching {identifier}: {e}")
+                print("Sleeping for 5 seconds...")
+                time.sleep(5)
         record_info = next(Bio.SeqIO.parse(StringIO(record_text), "genbank"))
         # We will extract the taxonomy information from the record.
         taxonomy = record_info.annotations.get("taxonomy", ["Unknown"])
