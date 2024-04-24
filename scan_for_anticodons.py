@@ -2,7 +2,6 @@ import os
 import subprocess
 from tempfile import NamedTemporaryFile
 
-from Bio.SeqFeature import SimpleLocation
 from Bio.SeqIO import read
 import pandas as pd
 from tqdm import tqdm
@@ -15,18 +14,24 @@ def find_anticodon(taxonomy_string: str, true_trna: str, sequence: str) -> str:
 
         path = ftemp.name
 
-        trna_flag = ["-O", "--max"]  # Search for "Other organellar tRNAs"
-        if "Mammalia" in taxonomy_string:
+        trna_flag = ["-O", '-g', 'gc_other_mito']  # Search for "Other organellar tRNAs"
+        if "Metatheria" in taxonomy_string:  # Marsupials
+            trna_flag = ['-M', 'mammal', "-g", "gc_marsu_mito"]  # Use alternative marsupial mitochondrial tRNA coding sequences
+        elif "Mammalia" in taxonomy_string:
             trna_flag = ["-M", "mammal"]  # Search for mammalian mitochondrial tRNAs
         elif "Vertebrata" in taxonomy_string:
             trna_flag = ["-M", "vert"]  # Search for vertebrate mitochondrial tRNAs
+        elif "Echinodermata" in taxonomy_string:
+            trna_flag += ['-g', 'gc_echinoderm_mito']  # Use alternative echinoderm mitochondrial tRNA coding sequences
+        elif 'Vertebrata' not in taxonomy_string:  # Check if invertebrate
+            trna_flag += ["-g", 'gc_invert_mito']  # Use alternative invertebrate mitochondrial tRNA coding sequences
 
         # -q = Quiet mode
         # -D = Disable pseudogene detection
         # --brief = No header, just the raw tRNA information
         # --max = "Maximum sensitivity" mode
         # -X 0 = Bit score cutoff, no cutoff since we know that we have a tRNA
-        result = subprocess.run(["tRNAscan-SE", '-q', '-D', '-X', '0', '--brief', *trna_flag, path], stdout=subprocess.PIPE, text=True)
+        result = subprocess.run(["tRNAscan-SE", "--max", '-q', '-D', '-X', '0', '--brief', *trna_flag, path], stdout=subprocess.PIPE, text=True)
         if result.returncode != 0:
             return None
         outputs = result.stdout.split("\n")

@@ -5,5 +5,7 @@ numpy
 scipy
 pyensembl
 openpyxl
+logomaker
+seaborn
 # tRNAscan-SE  bioconda
 # blast bioconda
