@@ -14,7 +14,7 @@ def find_anticodon(taxonomy_string: str, true_trna: str, sequence: str) -> str:
 
         path = ftemp.name
 
-        trna_flag = ["-O", '-g', 'gc_other_mito']  # Search for "Other organellar tRNAs"
+        trna_flag = ["-O", '-g', 'gcode.othmito']  # Search for "Other organellar tRNAs"
         if "Metatheria" in taxonomy_string:  # Marsupials
             trna_flag = ['-M', 'mammal', "-g", "translation_tables/gcode.masumito"]  # Use alternative marsupial mitochondrial tRNA coding sequences
         elif "Mammalia" in taxonomy_string:
