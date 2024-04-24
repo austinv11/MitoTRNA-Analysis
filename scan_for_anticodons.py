@@ -16,15 +16,15 @@ def find_anticodon(taxonomy_string: str, true_trna: str, sequence: str) -> str:
 
         trna_flag = ["-O", '-g', 'gc_other_mito']  # Search for "Other organellar tRNAs"
         if "Metatheria" in taxonomy_string:  # Marsupials
-            trna_flag = ['-M', 'mammal', "-g", "gc_marsu_mito"]  # Use alternative marsupial mitochondrial tRNA coding sequences
+            trna_flag = ['-M', 'mammal', "-g", "translation_tables/gcode.masumito"]  # Use alternative marsupial mitochondrial tRNA coding sequences
         elif "Mammalia" in taxonomy_string:
             trna_flag = ["-M", "mammal"]  # Search for mammalian mitochondrial tRNAs
         elif "Vertebrata" in taxonomy_string:
             trna_flag = ["-M", "vert"]  # Search for vertebrate mitochondrial tRNAs
         elif "Echinodermata" in taxonomy_string:
-            trna_flag += ['-g', 'gc_echinoderm_mito']  # Use alternative echinoderm mitochondrial tRNA coding sequences
+            trna_flag += ['-g', 'translation_tables/gcode.echdmito']  # Use alternative echinoderm mitochondrial tRNA coding sequences
         elif 'Vertebrata' not in taxonomy_string:  # Check if invertebrate
-            trna_flag += ["-g", 'gc_invert_mito']  # Use alternative invertebrate mitochondrial tRNA coding sequences
+            trna_flag += ["-g", 'translation_tables/gcode.invmito']  # Use alternative invertebrate mitochondrial tRNA coding sequences
 
         # -q = Quiet mode
         # -D = Disable pseudogene detection
